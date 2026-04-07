@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/AssetRipper.Tools.ExportRunner/">
+    <Project Path="src/AssetRipper.Tools.ExportRunner/AssetRipper.Tools.ExportRunner.csproj" />
+  </Folder>
+  <Folder Name="/vendor/" />
+  <Folder Name="/vendor/assetripper/" />
+  <Folder Name="/vendor/assetripper/Source/">
+    <Project Path="vendor/assetripper/Source/AssetRipper.Assets/AssetRipper.Assets.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Configuration/AssetRipper.Configuration.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export.Modules.Audio/AssetRipper.Export.Modules.Audio.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export.Modules.Models/AssetRipper.Export.Modules.Models.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export.Modules.Textures/AssetRipper.Export.Modules.Textures.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export.PrimaryContent/AssetRipper.Export.PrimaryContent.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export.UnityProjects/AssetRipper.Export.UnityProjects.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Export/AssetRipper.Export.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Import/AssetRipper.Import.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.IO.Files/AssetRipper.IO.Files.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Numerics/AssetRipper.Numerics.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Processing.SourceGenerator/AssetRipper.Processing.SourceGenerator.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Processing/AssetRipper.Processing.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.SerializationLogic/AssetRipper.SerializationLogic.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.SourceGenerated.Extensions.SourceGenerator/AssetRipper.SourceGenerated.Extensions.SourceGenerator.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.SourceGenerated.Extensions/AssetRipper.SourceGenerated.Extensions.csproj" />
+    <Project Path="vendor/assetripper/Source/AssetRipper.Yaml/AssetRipper.Yaml.csproj" />
+  </Folder>
+</Solution>

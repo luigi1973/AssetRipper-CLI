@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\AssetRipper.IO.Files\AssetRipper.IO.Files.csproj" />
+	</ItemGroup>
+
+</Project>

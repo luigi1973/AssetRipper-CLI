@@ -1,0 +1,12 @@
+- name: CLI
+  items:
+    - name: Introduction
+      href: intro.md
+    - name: Usage Guide
+      href: CliUsageGuide.md
+    - name: Implementation Status
+      href: CliImplementationStatus.md
+    - name: Code Review Findings
+      href: CodeReviewFindings.md
+    - name: Architecture Notes
+      href: CliArchitectureRefactor.md

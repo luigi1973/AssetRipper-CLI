@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="AsmResolver.DotNet" Version="6.0.0-beta.5" />
+		<PackageReference Include="AssetRipper.Primitives" Version="3.2.0" />
+	</ItemGroup>
+
+</Project>

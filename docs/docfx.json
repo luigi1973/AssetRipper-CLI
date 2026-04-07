@@ -1,0 +1,21 @@
+{
+  "build": {
+    "content": [
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "dest": "_site",
+    "template": [
+      "default",
+      "templates/darkfx"
+    ],
+    "markdownEngineName": "markdig",
+    "disableGitFeatures": false
+  }
+}
