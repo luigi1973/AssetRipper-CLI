@@ -49,7 +49,7 @@ internal sealed class CliExportExecutor
 		WriteFailedAssetsArtifact(options, manifest);
 		WriteRecursiveUnpackArtifact(options, manifest);
 		WriteSummary(options, manifest);
-		return manifest.Jobs.All(job => string.Equals(job.Status, "success", StringComparison.Ordinal)) ? 0 : 1;
+		return manifest.Jobs.Any(job => string.Equals(job.Status, "failed", StringComparison.Ordinal)) ? 1 : 0;
 	}
 
 	private void PrepareRootOutput(ExportCommandOptions options)

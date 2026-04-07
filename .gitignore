@@ -14,5 +14,7 @@ bin
 launchSettings.json
 .DS_Store
 outputs/
+/input/
+/output/
 artifacts/
 reference/

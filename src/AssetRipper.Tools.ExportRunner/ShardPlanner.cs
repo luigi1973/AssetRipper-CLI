@@ -92,7 +92,7 @@ internal static class ShardPlanner
 					Name: group.Name,
 					InputPaths: group.InputPaths,
 					OutputPath: shardOutputPath,
-					CleanOutput: true,
+					CleanOutput: options.CleanOutput,
 					SkipIfDoneMarkerExists: true,
 					DoneMarkerPath: Path.Combine(shardOutputPath, ".done"),
 					RunLogPath: runLogPath));
@@ -112,7 +112,7 @@ internal static class ShardPlanner
 					Name: group.Name,
 					InputPaths: group.InputPaths,
 					OutputPath: shardOutputPath,
-					CleanOutput: true,
+					CleanOutput: options.CleanOutput,
 					SkipIfDoneMarkerExists: true,
 					DoneMarkerPath: Path.Combine(shardOutputPath, ".done"),
 					RunLogPath: runLogPath));

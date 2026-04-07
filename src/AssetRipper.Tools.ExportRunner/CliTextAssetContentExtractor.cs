@@ -158,8 +158,32 @@ internal sealed class CliTextAssetContentExtractor : IContentExtractor
 			directoryName = $"{fileName}_unpacked";
 		}
 
+		return GetAvailableDirectoryPath(parentDirectory, directoryName, fileSystem);
+	}
+
+	private static string GetAvailableDirectoryPath(string parentDirectory, string directoryName, FileSystem fileSystem)
+	{
 		string candidatePath = fileSystem.Path.Join(parentDirectory, directoryName);
-		return fileSystem.File.Exists(candidatePath) ? fileSystem.Path.Join(parentDirectory, $"{directoryName}_unpacked") : candidatePath;
+		if (!fileSystem.File.Exists(candidatePath) && !fileSystem.Directory.Exists(candidatePath))
+		{
+			return candidatePath;
+		}
+
+		string suffixedDirectoryName = $"{directoryName}_unpacked";
+		string suffixedCandidatePath = fileSystem.Path.Join(parentDirectory, suffixedDirectoryName);
+		if (!fileSystem.File.Exists(suffixedCandidatePath) && !fileSystem.Directory.Exists(suffixedCandidatePath))
+		{
+			return suffixedCandidatePath;
+		}
+
+		for (int index = 2; ; index++)
+		{
+			string numberedCandidatePath = fileSystem.Path.Join(parentDirectory, $"{suffixedDirectoryName}_{index:000}");
+			if (!fileSystem.File.Exists(numberedCandidatePath) && !fileSystem.Directory.Exists(numberedCandidatePath))
+			{
+				return numberedCandidatePath;
+			}
+		}
 	}
 
 	private static void ResetOutputDirectory(string outputPath)

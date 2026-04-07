@@ -1,6 +1,7 @@
 ﻿using AssetRipper.Assets;
 using AssetRipper.Export.Configuration;
 using AssetRipper.Export.Modules.Textures;
+using AssetRipper.Import.Logging;
 using AssetRipper.SourceGenerated.Classes.ClassID_189;
 using AssetRipper.SourceGenerated.Extensions;
 
@@ -30,14 +31,20 @@ public sealed class TextureExporter : IContentExtractor
 
 	public bool Export(IUnityObjectBase asset, string path, FileSystem fileSystem)
 	{
-		if (TextureConverter.TryConvertToBitmap((IImageTexture)asset, out DirectBitmap bitmap))
+		try
 		{
-			using Stream stream = fileSystem.File.Create(path);
-			bitmap.Save(stream, ImageFormat);
-			return true;
+			if (TextureConverter.TryConvertToBitmap((IImageTexture)asset, out DirectBitmap bitmap))
+			{
+				using Stream stream = fileSystem.File.Create(path);
+				bitmap.Save(stream, ImageFormat);
+				return true;
+			}
+
+			return false;
 		}
-		else
+		catch (Exception ex)
 		{
+			Logger.Warning(LogCategory.Export, $"Skipping texture export for '{asset.GetBestName()}': {ex.Message}");
 			return false;
 		}
 	}
