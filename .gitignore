@@ -13,6 +13,9 @@ bin
 *.blend1
 launchSettings.json
 .DS_Store
+*.log
+
+# Local test / export outputs
 outputs/
 /input/
 /output/

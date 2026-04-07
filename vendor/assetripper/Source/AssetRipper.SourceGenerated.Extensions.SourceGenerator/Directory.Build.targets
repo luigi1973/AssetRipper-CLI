@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <SgfMsBuildOverridePath>$(NuGetPackageRoot)sourcegenerator.foundations\2.0.14\build\SourceGenerator.Foundations.MSBuild.dll</SgfMsBuildOverridePath>
+  </PropertyGroup>
+  <UsingTask
+    TaskName="FilterAssembliesTask"
+    AssemblyFile="$(SgfMsBuildOverridePath)"
+    Override="true"
+    Condition="'$(MSBuildProjectName)' == 'AssetRipper.SourceGenerated.Extensions.SourceGenerator'" />
+</Project>
