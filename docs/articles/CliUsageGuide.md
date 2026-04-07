@@ -1,23 +1,40 @@
 # CLI Usage Guide
 
-This guide documents the current command-line surface of the export runner in this repository.
+This guide documents the current command-line surface of `AssetRipper.Tools.ExportRunner` in this repository.
 
-The CLI host lives at:
+## Build Output
 
-- `upstream/assetripper_dotnet10/Source/AssetRipper.Tools.ExportRunner`
+This repository should be documented and tested with Windows users in mind first. The examples below therefore use PowerShell syntax.
 
-Typical built binary path:
+Install the SDK on Windows:
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll
+```powershell
+winget install Microsoft.DotNet.SDK.10
+```
+
+Build the solution:
+
+```powershell
+dotnet build AssetRipperCLI.slnx -c Release
+```
+
+Run the built binary on Windows:
+
+```powershell
+.\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.exe
+```
+
+Portable invocation:
+
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll
 ```
 
 ## Commands
 
 ### Inspect
 
-Use `inspect` to quickly understand what a game contains before exporting.
+Use `inspect` to understand what a game contains before exporting.
 
 ```bash
 AssetRipper.Tools.ExportRunner inspect <input-path> [more-input-paths...]
@@ -29,17 +46,17 @@ What it prints:
 - asset collection count
 - asset count
 - resource file count
+- path semantics classification
+- suggested profiles
+- profile evidence
 - top asset classes
 - top output buckets
-- profile evidence
-- suggested profiles
 
 Example:
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  inspect "./input/Game"
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  inspect .\input\GameRoot
 ```
 
 ### Analyze
@@ -50,12 +67,15 @@ Use `analyze` when you want the same inventory pass plus a JSON artifact.
 AssetRipper.Tools.ExportRunner analyze <input-path> [more-input-paths...] [--report <report-path>]
 ```
 
+Artifact written by `--report`:
+
+- `inventory-summary`
+
 Example:
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  analyze "./input/Game" --report ./analysis.json
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  analyze .\input\GameRoot --report .\output\analysis.json
 ```
 
 ### Export
@@ -97,22 +117,19 @@ Profile mapping:
 
 Examples:
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  export "./input/Game" --output ./outputs/game_primary --mode primary
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  export .\input\GameRoot --output .\output\game_primary --mode primary
 ```
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  export "./input/Game" --output ./outputs/game_cg --profile cg
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  export .\input\GameRoot --output .\output\game_cg --profile cg
 ```
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  export "./input/Game" --output ./outputs/game_dump --mode dump
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  export .\input\GameRoot --output .\output\game_dump --mode dump
 ```
 
 ### Report
@@ -134,10 +151,9 @@ Supported artifact types:
 
 Example:
 
-```bash
-/home/m/.local/dotnet-10.0.200/dotnet \
-  upstream/assetripper_dotnet10/Source/0Bins/AssetRipper.Tools.ExportRunner/Release/AssetRipper.Tools.ExportRunner.dll \
-  report ./outputs/game_cg/export-manifest.json
+```powershell
+dotnet .\artifacts\bin\AssetRipper.Tools.ExportRunner\Release\net10.0\AssetRipper.Tools.ExportRunner.dll `
+  report .\output\game_cg\export-manifest.json
 ```
 
 ## Legacy Direct Commands
@@ -149,7 +165,9 @@ AssetRipper.Tools.ExportRunner primary <input-path> <output-path> [more-input-pa
 AssetRipper.Tools.ExportRunner dump <input-path> <output-path> [more-input-paths...]
 ```
 
-They are equivalent to direct backend export and bypass profile naming.
+They are backend-first compatibility paths. Prefer `export` for normal usage.
+
+If you are on macOS or Linux, the same commands work with `/` path separators and your shell's normal line continuation syntax.
 
 ## Common Profiles
 
@@ -163,7 +181,7 @@ Good fit:
 - gallery stills
 - memory images
 - static story art
-- static authored background/scene art that is stored directly as textures or static prefab-backed visuals
+- static authored background or scene art stored directly as textures or static prefab-backed visuals
 
 Out of scope:
 
@@ -171,8 +189,6 @@ Out of scope:
 - Live2D reconstruction
 - Cubism reconstruction
 - animated runtime scene composition
-
-This profile is heuristic. It is intended to find static CG assets, not to restore an entire runtime presentation stack.
 
 ### `audio`
 
@@ -210,18 +226,28 @@ Useful flags:
 - `--shard-strategy auto`
 - `--shard-direct-children`
 
-`--shard-direct-children` is kept as shorthand for `--shard-strategy direct-children`.
+`--shard-direct-children` is shorthand for `--shard-strategy direct-children`.
+
+Artifacts commonly written by export runs:
+
+- `export-plan.json`
+- `export-manifest.json`
+- `summary.txt`
+- `skipped-assets.json` when profile filtering skips collections
+- `failed-assets.json` when per-collection exporter failures are recorded
+- `recursive-unpack.json` when recursive unpack runs and writes a summary artifact
 
 ## Suggested Workflow
 
 1. Run `inspect` first.
 2. If needed, run `analyze --report ...`.
-3. Start with a targeted profile like `audio`, `cg`, or `backgrounds`.
+3. Start with a targeted profile such as `audio`, `cg`, or `backgrounds`.
 4. If filtering is too narrow, widen to `full-raw`.
-5. Use `dump` when the goal is project-style output rather than filtered asset extraction.
+5. Use `dump` or `full-project` when the goal is project-style export rather than filtered primary content.
 
 ## Notes
 
 - `cg` is heuristic and static-only.
-- primary texture export now prefers streamed texture payloads over embedded preview-style image bytes when both exist.
-- some games will still produce false positives in `cg`, especially when UI or gallery-related assets share naming conventions with scene art.
+- `audio` can still be broad on some games.
+- some games will emit importer warnings while still exporting usable content.
+- broken streamed textures are now skipped instead of aborting the entire primary export.

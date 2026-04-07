@@ -1,60 +1,58 @@
 # CLI Implementation Status
 
-This document describes the current implementation in this repository. It is a snapshot, not a roadmap.
+This document describes the current implementation in this repository. It is a status snapshot, not a roadmap.
 
-## Scope
+## Repository Shape
 
-The current CLI supports four workflows:
-
-- inspect inputs before export
-- analyze inputs and optionally write a JSON artifact
-- export with either `primary` or `dump` backends
-- report previously written artifacts
-
-The main project lives in:
+Main project:
 
 - `src/AssetRipper.Tools.ExportRunner`
 
-## Commands
+Supporting code:
 
-### Inspect
+- `vendor/assetripper/Source/...`
 
-```bash
-AssetRipper.Tools.ExportRunner inspect <input-path> [more-input-paths...]
-```
+Solution file:
 
-Behavior:
+- `AssetRipperCLI.slnx`
 
-- loads and processes the input
-- prints a compact inventory summary
-- shows project version, counts, path semantics, top classes, top buckets, and suggested profiles
+Primary documentation posture:
 
-### Analyze
+- Windows-first command examples
+- PowerShell snippets in user-facing docs
+- portable `dotnet <dll>` invocation kept as the default documented path
 
-```bash
-AssetRipper.Tools.ExportRunner analyze <input-path> [more-input-paths...] [--report <report-path>]
-```
+## Current Workflow Model
 
-Behavior:
+The CLI is organized around four top-level workflows:
 
-- runs the same inventory pass as `inspect`
-- prints profile evidence and suggested profiles
-- can write `inventory-summary` as JSON
+- `inspect`
+- `analyze`
+- `export`
+- `report`
 
-### Export
+This is implemented in:
 
-```bash
-AssetRipper.Tools.ExportRunner export <input-path> [more-input-paths...] --output <output-path> [--profile <profile> | --mode <primary|dump>]
-```
+- `Program.cs`
+- `InventoryWorkflow.cs`
+- `InventorySummaryBuilder.cs`
+- `ExportProfileResolver.cs`
+- `ProfileSelection.cs`
+- `ExportPlanBuilder.cs`
+- `ShardPlanner.cs`
+- `CliExportExecutor.cs`
+- `ArtifactReportWorkflow.cs`
 
-Supported options:
+## Export Modes
 
-- `--profile`
-- `--mode`
-- `--keep-output`
-- `--recursive-unpack=on|off`
-- `--shard-strategy=off|direct-children|auto`
-- `--shard-direct-children`
+Backend modes:
+
+- `primary`
+- `dump`
+
+Primary export is also used underneath heuristic profiles such as `cg`, `audio`, and `characters`.
+
+## Profiles
 
 Supported profiles:
 
@@ -69,42 +67,88 @@ Supported profiles:
 - `full-project`
 - `full-raw`
 
-Profile mapping:
+Current implementation details:
 
-- `full-project` -> `dump`
-- `full-raw` -> `primary`
-- other profiles -> `primary` with heuristic collection filtering
+- profile matching is heuristic
+- selection happens at collection level
+- profile evidence is derived from asset class, path buckets, and naming tokens
+- suggested profiles are derived from both coarse inventory counts and profile-evidence signals
 
-Compatibility entrypoints still exist:
+## Execution Model
 
-```bash
-AssetRipper.Tools.ExportRunner primary <input-path> <output-path> [more-input-paths...]
-AssetRipper.Tools.ExportRunner dump <input-path> <output-path> [more-input-paths...]
-```
+### Load
 
-### Report
+Load worker settings:
 
-```bash
-AssetRipper.Tools.ExportRunner report <artifact-path>
-```
+- `ASSETRIPPER_LOAD_WORKERS`
+- fallback: `ASSETRIPPER_WORKERS`
 
-Supported artifact types:
+### Primary export
+
+Primary export worker settings:
+
+- `ASSETRIPPER_EXPORT_WORKERS`
+- fallback: `ASSETRIPPER_WORKERS`
+
+Current behavior:
+
+- exports collections in parallel
+- records skipped collections and failed collections
+- now treats broken streamed textures as per-collection failures instead of aborting the whole export run
+
+### Recursive unpack
+
+Recursive unpack worker settings:
+
+- `ASSETRIPPER_UNPACK_WORKERS`
+- fallback: `ASSETRIPPER_WORKERS`
+
+Current behavior:
+
+- runs after both `primary` and `dump` exports when enabled
+- handles nested bundle-like payloads discovered during export
+- now avoids reusing an existing output directory name when unpacking nested content
+
+### Job scheduling
+
+Job scheduler settings:
+
+- `ASSETRIPPER_JOB_WORKERS`
+
+Current behavior:
+
+- builds an `export-plan` before execution
+- routes planned jobs through a bounded scheduler
+- supports single-job and sharded execution
+- treats `skipped` shard jobs as successful terminal outcomes for process exit purposes
+
+## Artifacts
+
+Analyze:
 
 - `inventory-summary`
+
+Export:
+
 - `export-plan`
 - `export-manifest`
 - `recursive-unpack`
 - `skipped-assets`
 - `failed-assets`
+- `summary.txt`
 
-## Execution Notes
+## Manual Validation Status
 
-- load, export, unpack, and job scheduling each have separate worker-count environment variables
-- sharded exports are planned through `ShardPlanner` and executed through `ExportScheduler`
-- recursive unpack currently runs after both `primary` and `dump` exports when enabled
+Manual batch validation has been run against several local Windows game samples.
 
-## Known Gaps
+Observed behavior:
 
-- profile selection is heuristic, not evidence-complete
-- CLI behavior still has known issues documented in [Code Review Findings](CodeReviewFindings.md)
-- dedicated automated tests for CLI routing, shard behavior, and artifact semantics are not present yet
+- `cg`, `audio`, and `primary` all completed successfully on multiple games
+- one previously failing `primary` case was retested successfully after export hardening changes
+- importer warnings still appear on some games while the export remains usable
+
+## Current Risks
+
+- profile quality is still heuristic rather than evidence-complete
+- some games still emit importer read warnings for specific asset types
+- automated CLI-level tests are still missing

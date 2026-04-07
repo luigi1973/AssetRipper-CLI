@@ -10,6 +10,7 @@ Own release confidence for CLI/export changes.
 - check docs and examples against actual CLI behavior
 - verify manifests, skipped reports, and output hierarchy consistency
 - identify regressions, missing tests, and weak assumptions
+- verify that Windows install and invocation guidance is accurate and easy to follow
 
 ## Inputs
 
@@ -31,6 +32,7 @@ Own release confidence for CLI/export changes.
 - Can a user understand what was exported and skipped?
 - Are large-project behaviors visible and predictable?
 - Are failures actionable?
+- Can a Windows user build and run the documented commands without translating shell syntax first?
 
 ## Constraints
 

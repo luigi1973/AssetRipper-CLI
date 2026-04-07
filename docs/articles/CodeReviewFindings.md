@@ -1,79 +1,67 @@
-# Code Review Findings
+# Known Limitations
 
-This document records the current review findings for the CLI workspace as of April 7, 2026. These are known issues, not resolved work.
+This document records the current known limitations and recent stability findings for the CLI workspace.
 
-## High Severity
+## Recently Fixed
 
-### Recursive unpack can delete an existing export directory
+The following issues were fixed on April 7, 2026:
 
-Affected files:
+- recursive unpack no longer reuses an existing export directory name and clobbers prior output
+- sharded reruns with cached `.done` markers no longer force a failing process exit code
+- `--keep-output` now applies to sharded jobs
+- a broken streamed texture no longer aborts the entire primary export job
 
-- `src/AssetRipper.Tools.ExportRunner/RecursiveBundleUnpacker.cs`
-- `src/AssetRipper.Tools.ExportRunner/CliTextAssetContentExtractor.cs`
+## Current Limitations
 
-Current behavior:
+### Heuristic profile selection
 
-- nested unpack picks an output directory based on the input file stem
-- if a directory with that stem already exists, the code does not treat that as a collision
-- the target path is then cleaned before the nested export is proven to succeed
+Profile selection is still heuristic.
 
-Why this is a problem:
+Practical consequence:
 
-- an existing export directory such as `foo/` can be deleted while unpacking `foo.bundle` or `foo.bytes`
-- this can destroy already-exported data before the nested export has completed
+- `cg` is useful for static illustration-style assets but can still include false positives
+- `audio` can be broader than expected on some games
+- profiles are best treated as workflow shortcuts, not perfect semantic classifiers
 
-Required fix direction:
+### Importer warnings on real-world games
 
-- treat existing directories as collisions, not just existing files
-- use a guaranteed unique temp/staging directory before replacing any prior output
-- only delete superseded bundle payloads after successful nested export
+Some games still emit importer warnings while remaining exportable.
 
-### Successful shard cache hits still return exit code 1
+Examples seen during local validation:
 
-Affected file:
+- `BuildSettings` read errors
+- `UnityConnectSettings` read errors
+- unknown or partially-read serialized asset types
+- short-read warnings for specific asset classes such as `Cubemap`
 
-- `src/AssetRipper.Tools.ExportRunner/CliExportExecutor.cs`
+Practical consequence:
 
-Current behavior:
+- a warning-free import should not currently be assumed
+- manifest and output review still matter after a run
 
-- a shard with a `.done` marker returns status `skipped`
-- the overall process returns success only when every job status is `success`
+### Limited automated validation
 
-Why this is a problem:
+Current testing is still manual-first.
 
-- a valid rerun of a sharded export can exit nonzero even when nothing is actually wrong
-- CI and shell scripts will treat cache-hit reruns as failures
+Practical consequence:
 
-Required fix direction:
+- manual spot checks have been valuable
+- the repository still needs automated tests for:
+  - CLI routing
+  - shard behavior
+  - artifact serialization
+  - exit-code behavior
+  - failure handling for broken assets
 
-- treat `skipped` as a successful terminal state for process exit purposes
-- keep `failed` as the only status that forces a nonzero exit code
+## Validation Notes
 
-## Medium Severity
+Recent local batch validation covered:
 
-### `--keep-output` is ignored for sharded jobs
+- multiple Windows Unity game samples
+- `cg`, `audio`, and `primary` variants
+- artifact generation and manifest inspection
 
-Affected files:
+Observed result:
 
-- `src/AssetRipper.Tools.ExportRunner/Program.cs`
-- `src/AssetRipper.Tools.ExportRunner/ShardPlanner.cs`
-
-Current behavior:
-
-- the root export command accepts `--keep-output`
-- sharded jobs are still created with `CleanOutput: true`
-
-Why this is a problem:
-
-- the CLI contract implies output preservation
-- sharded reruns still wipe shard directories unless `.done` causes a skip
-
-Required fix direction:
-
-- carry the root clean/keep policy into shard job planning
-- document any exceptions explicitly if shard behavior must differ
-
-## Notes
-
-- `dotnet build AssetRipperCLI.slnx -c Release` succeeded during review
-- these findings are based on code inspection; scenario tests with real bundle fixtures are still pending
+- the export pipeline now handles a previously failing streamed-texture case by completing the run instead of aborting it
+- recursive unpack remained quiet on the tested samples, producing zero candidate nested bundle files

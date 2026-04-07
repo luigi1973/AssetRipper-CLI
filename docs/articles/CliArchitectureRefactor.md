@@ -32,9 +32,20 @@ The implementation follows the same broad split described in `.agents`:
 - large bundle depots may require shard-oriented execution
 - the CLI must explain what it exported, skipped, and failed
 - compatibility entrypoints still exist, but the workflow surface should stay centered on `export`
+- user-facing docs should remain Windows-friendly by default
+
+## Recent Stabilization
+
+Recent work improved launch-readiness:
+
+- recursive unpack now avoids directory collisions instead of reusing an existing export path
+- sharded reruns no longer report process failure when work is intentionally skipped
+- `--keep-output` now propagates correctly into sharded jobs
+- broken streamed textures are skipped instead of aborting the entire primary export job
 
 ## Next Useful Work
 
-- fix the known issues in [Code Review Findings](CodeReviewFindings.md)
 - add CLI-level tests for shard reruns, keep-output behavior, and recursive unpack safety
-- trim remaining docs and examples that still describe the broader upstream website product
+- continue importer hardening for warning-heavy games
+- tighten profile documentation using more validated examples
+- prepare CI and release packaging expectations for GitHub launch

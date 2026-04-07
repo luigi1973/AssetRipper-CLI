@@ -8,6 +8,7 @@ The purpose is simple:
 - split discovery, implementation, and validation cleanly
 - avoid duplicate investigation and conflicting edits
 - keep export behavior aligned with player-facing use cases
+- keep repository docs launch-ready for a Windows-first audience
 
 ## Operating Principles
 
@@ -16,6 +17,7 @@ The purpose is simple:
 - Prefer workflow-oriented design over exporter-oriented design.
 - Every meaningful export change should improve inspectability, coverage reporting, or execution predictability.
 - Do not silently broaden scope. Document follow-on work instead.
+- Default repo-facing docs and examples to Windows-friendly usage unless there is a clear reason not to.
 
 ## Core Workstreams
 

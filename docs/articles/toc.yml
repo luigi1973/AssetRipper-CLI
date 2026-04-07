@@ -6,7 +6,9 @@
       href: CliUsageGuide.md
     - name: Implementation Status
       href: CliImplementationStatus.md
-    - name: Code Review Findings
+    - name: Known Limitations
       href: CodeReviewFindings.md
+    - name: Release Readiness
+      href: ReleaseReadiness.md
     - name: Architecture Notes
       href: CliArchitectureRefactor.md

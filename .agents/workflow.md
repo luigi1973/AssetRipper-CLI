@@ -35,3 +35,4 @@ This file defines how the agent roles collaborate on substantial CLI and export 
 - explainability over silent best-effort behavior
 - bounded concurrency over ad hoc parallel loops
 - compatibility during migration, then deliberate cleanup
+- Windows-friendly repo docs and examples for launch-facing material

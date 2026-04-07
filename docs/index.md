@@ -8,16 +8,18 @@ What is here:
 - `vendor/assetripper`: retained upstream libraries needed by the CLI
 - `docs/articles/CliUsageGuide.md`: command reference
 - `docs/articles/CliImplementationStatus.md`: current implementation notes
-- `docs/articles/CodeReviewFindings.md`: known problems found in review
+- `docs/articles/CodeReviewFindings.md`: current limitations and resolved review items
 
 Start with:
 
 - [CLI Usage Guide](articles/CliUsageGuide.md)
 - [Implementation Status](articles/CliImplementationStatus.md)
-- [Code Review Findings](articles/CodeReviewFindings.md)
+- [Known Limitations](articles/CodeReviewFindings.md)
+- [Release Readiness](articles/ReleaseReadiness.md)
 
 Current state:
 
 - the solution builds successfully
-- review findings are documented but not fixed yet
-- test coverage for the CLI workflows has not been added yet
+- the main April 7, 2026 export-handling review items have been fixed
+- local batch validation has been run against several sample games
+- dedicated automated tests for CLI workflows have not been added yet
